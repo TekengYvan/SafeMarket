@@ -1,0 +1,80 @@
+<?php
+
+return [
+    // Navigation & General
+    'marketplace' => 'Marché',
+    'cart' => 'Panier',
+    'my_orders' => 'Mes Commandes',
+    'negotiations' => 'Négociations',
+    'my_shop' => 'Ma Boutique',
+    'administration' => 'Administration',
+    'dashboard' => 'Tableau de Bord',
+    'profile' => 'Profil',
+    'logout' => 'Déconnexion',
+    'login' => 'Connexion',
+    'register' => 'Inscription',
+    'welcome' => 'Bienvenue sur SafeMarket',
+    'secure_marketplace' => 'La marketplace la plus sécurisée',
+    'search_placeholder' => 'Que recherchez-vous ?',
+    'search_button' => 'Chercher',
+    'categories' => 'Catégories',
+    'all' => 'Toutes',
+
+    // Products & Promotions
+    'view_product' => 'Voir le produit',
+    'in_stock' => 'En stock',
+    'out_of_stock' => 'Hors stock',
+    'no_product_found' => 'Aucun produit trouvé.',
+    'negotiate_price' => 'Négocier le prix',
+    'your_proposal' => 'Votre proposition (FCFA)',
+    'message_to_vendor' => 'Message au vendeur',
+    'send_proposal' => 'Envoyer la proposition',
+    'price' => 'Prix (FCFA)',
+    'condition' => 'État',
+    'location' => 'Localisation (Ville)',
+    'images' => 'Images du produit',
+    'description' => 'Description détaillée',
+    'publish_product' => 'Publier le produit',
+    'add_product' => 'Ajouter un produit',
+    'edit_product' => 'Modifier le produit',
+    'my_products' => 'Mes Produits',
+    'on_sale' => 'En Promotion',
+    'discount_price' => 'Prix Réduit Promo',
+
+    // Negotiation Chat
+    'negotiation_discussion' => 'Discussion de Négociation',
+    'write_message' => 'Écrivez un message...',
+    'send' => 'Envoyer',
+    'accept_offer' => "Accepter l'offre",
+    'refuse' => 'Refuser',
+    'negotiation_ended' => 'Cette négociation est terminée.',
+    'negotiated_price' => 'Prix Négocié',
+    'product' => 'Produit',
+
+    // Cart & Checkout
+    'your_cart' => 'Votre Panier',
+    'summary' => 'Récapitulatif',
+    'total' => 'Total',
+    'wallet_balance' => 'Votre Solde Wallet :',
+    'insufficient_balance' => 'Solde insuffisant',
+    'place_order_escrow' => 'Passer la commande (ESCROW)',
+
+    // Orders & Release Code
+    'orders_and_sales' => 'Mes Commandes et Ventes',
+    'my_purchases' => 'Mes Achats',
+    'my_sales' => 'Mes Ventes',
+    'vendor' => 'Vendeur',
+    'buyer' => 'Acheteur',
+    'amount' => 'Montant',
+    'status' => 'Statut',
+    'action' => 'Action',
+    'manage' => 'Gérer',
+    'release_code' => 'Code de libération',
+    'copy_code' => 'Copier le code',
+
+    // Wallet Deposits & Withdrawals
+    'deposit' => 'Recharger Wallet',
+    'withdraw' => 'Retirer des fonds',
+    'momo' => 'MTN Mobile Money',
+    'om' => 'Orange Money',
+];

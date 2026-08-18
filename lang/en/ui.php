@@ -1,0 +1,80 @@
+<?php
+
+return [
+    // Navigation & General
+    'marketplace' => 'Marketplace',
+    'cart' => 'Cart',
+    'my_orders' => 'My Orders',
+    'negotiations' => 'Negotiations',
+    'my_shop' => 'My Shop',
+    'administration' => 'Administration',
+    'dashboard' => 'Dashboard',
+    'profile' => 'Profile',
+    'logout' => 'Log Out',
+    'login' => 'Log In',
+    'register' => 'Register',
+    'welcome' => 'Welcome to SafeMarket',
+    'secure_marketplace' => 'The Most Secure Marketplace',
+    'search_placeholder' => 'What are you looking for?',
+    'search_button' => 'Search',
+    'categories' => 'Categories',
+    'all' => 'All',
+
+    // Products & Promotions
+    'view_product' => 'View Product',
+    'in_stock' => 'In Stock',
+    'out_of_stock' => 'Out of Stock',
+    'no_product_found' => 'No products found.',
+    'negotiate_price' => 'Negotiate Price',
+    'your_proposal' => 'Your Proposal (FCFA)',
+    'message_to_vendor' => 'Message to Vendor',
+    'send_proposal' => 'Send Proposal',
+    'price' => 'Price (FCFA)',
+    'condition' => 'Condition',
+    'location' => 'Location (City)',
+    'images' => 'Product Images',
+    'description' => 'Detailed Description',
+    'publish_product' => 'Publish Product',
+    'add_product' => 'Add Product',
+    'edit_product' => 'Edit Product',
+    'my_products' => 'My Products',
+    'on_sale' => 'On Sale',
+    'discount_price' => 'Discounted Promo Price',
+
+    // Negotiation Chat
+    'negotiation_discussion' => 'Negotiation Discussion',
+    'write_message' => 'Write a message...',
+    'send' => 'Send',
+    'accept_offer' => 'Accept Offer',
+    'refuse' => 'Decline',
+    'negotiation_ended' => 'This negotiation has ended.',
+    'negotiated_price' => 'Negotiated Price',
+    'product' => 'Product',
+
+    // Cart & Checkout
+    'your_cart' => 'Your Cart',
+    'summary' => 'Order Summary',
+    'total' => 'Total',
+    'wallet_balance' => 'Your Wallet Balance:',
+    'insufficient_balance' => 'Insufficient balance',
+    'place_order_escrow' => 'Place Order (ESCROW)',
+
+    // Orders & Release Code
+    'orders_and_sales' => 'My Orders & Sales',
+    'my_purchases' => 'My Purchases',
+    'my_sales' => 'My Sales',
+    'vendor' => 'Vendor',
+    'buyer' => 'Buyer',
+    'amount' => 'Amount',
+    'status' => 'Status',
+    'action' => 'Action',
+    'manage' => 'Manage',
+    'release_code' => 'Release Code',
+    'copy_code' => 'Copy Code',
+
+    // Wallet Deposits & Withdrawals
+    'deposit' => 'Recharge Wallet',
+    'withdraw' => 'Withdraw Funds',
+    'momo' => 'MTN Mobile Money',
+    'om' => 'Orange Money',
+];
