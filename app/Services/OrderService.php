@@ -22,8 +22,8 @@ class OrderService
         if ($updated) {
             Notification::create([
                 'user_id' => $order->buyer_id,
-                'title' => 'Commande expédiée 📦',
-                'content' => "Le commerçant a expédié votre commande pour le produit '{$order->product->title}'. Numéro de suivi : {$trackingNumber}.",
+                'title' => 'Order Shipped 📦',
+                'content' => "The Vendor has shipped the Product '{$order->product->title}'. Tracking Number: {$trackingNumber}.",
             ]);
         }
 
@@ -39,8 +39,8 @@ class OrderService
         if ($updated) {
             Notification::create([
                 'user_id' => $order->buyer_id,
-                'title' => 'Commande livrée 📦',
-                'content' => "Le commerçant a marqué votre commande pour le produit '{$order->product->title}' comme livrée. Veuillez confirmer la réception pour libérer les fonds.",
+                'title' => 'Order delivered 📦',
+                'content' => "Then merchant has marked your order for the product '{$order->product->title}' as delivered. please confirm receipt to release the fund.",
             ]);
         }
 
@@ -93,8 +93,8 @@ class OrderService
             // Send notification to vendor
             Notification::create([
                 'user_id' => $order->product->vendor_id,
-                'title' => 'Fonds libérés 💰',
-                'content' => "L'acheteur a validé la réception du produit '{$order->product->title}'. Le montant de " . number_format($vendorAmount, 2) . " FCFA a été crédité sur votre solde.",
+                'title' => 'Fund release 💰',
+                'content' => "The buyer has valid the receipt of the product '{$order->product->title}'. The amount " . number_format($vendorAmount, 2) . " FCFA was credited to your account.",
             ]);
 
             return true;

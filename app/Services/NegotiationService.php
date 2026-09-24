@@ -110,7 +110,7 @@ class NegotiationService
                 Notification::create([
                     'user_id' => $recipientId,
                     'title' => "Négociation {$statusText}",
-                    'content' => "L'offre pour '" . ($negotiation->product->title ?? 'le produit') . "' a été {$statusText}.",
+                    'content' => "The offer for'" . ($negotiation->product->title ?? 'the product') . "' has been {$statusText}.",
                 ]);
             } catch (\Throwable $e) {
                 // Ignore
