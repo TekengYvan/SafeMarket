@@ -21,16 +21,16 @@ class ReviewController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         if ($order->status !== 'completed') {
-            return response()->json(['message' => 'You can only review completed orders'], 400);
+            return response()->json(['message' => __('You can only review completed orders')], 400);
         }
 
         if ($order->buyer_id !== $request->user()->id) {
-            return response()->json(['message' => 'Only the buyer can review the transaction'], 403);
+            return response()->json(['message' => __('Only the buyer can review the transaction')], 403);
         }
 
         // Check if review already exists
         if (Review::where('order_id', $order->id)->exists()) {
-            return response()->json(['message' => 'You have already reviewed this transaction'], 400);
+            return response()->json(['message' => __('You have already reviewed this transaction')], 400);
         }
 
         $reviewee = $order->product->vendor;
@@ -59,7 +59,7 @@ class ReviewController extends Controller
         $reviewee->save();
 
         return response()->json([
-            'message' => 'Review submitted successfully',
+            'message' => __('Review submitted successfully'),
             'review' => $review,
             'new_trust_score' => $reviewee->trust_score
         ]);

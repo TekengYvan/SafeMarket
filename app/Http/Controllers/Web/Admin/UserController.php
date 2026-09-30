@@ -43,17 +43,17 @@ class UserController extends Controller
             'is_admin' => $request->boolean('is_admin'),
         ]);
 
-        return redirect()->route('admin.users.index')->with('status', 'User updated successfully');
+        return redirect()->route('admin.users.index')->with('status', __('User updated successfully'));
     }
 
     public function destroy(User $user)
     {
         if ($user->id === auth()->id()) {
-            return back()->with('error', 'You cannot delete yourself');
+            return back()->with('error', __('You cannot delete yourself'));
         }
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('status', 'User deleted successfully');
+        return redirect()->route('admin.users.index')->with('status', __('User deleted successfully'));
     }
 }

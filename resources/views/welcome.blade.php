@@ -175,28 +175,28 @@
                      currentSlide: 0,
                      slides: [
                          {
-                             tag: '{{ app()->getLocale() == 'en' ? 'Street Style' : 'Style Urbain' }}',
-                             title: 'MUST HAVES',
-                             desc: '{{ app()->getLocale() == 'en' ? 'Discover our new exclusive collection of streetwear and certified tech devices.' : 'Découvrez la nouvelle collection exclusive de vêtements de rue et de produits technologiques certifiés.' }}',
-                             img: '{{ asset('images/striz/hero.jpg') }}',
-                             btnText: '{{ app()->getLocale() == 'en' ? 'Shop Now' : 'Voir le shop' }}',
-                             link: '{{ route('home') }}'
+                             tag: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Street Style' : 'Style Urbain') }},
+                             title: {{ \Illuminate\Support\Js::from(__('MUST HAVES')) }},
+                             desc: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Discover our new exclusive collection of streetwear and certified tech devices.' : 'Découvrez la nouvelle collection exclusive de vêtements de rue et de produits technologiques certifiés.') }},
+                             img: {{ \Illuminate\Support\Js::from(asset('images/striz/hero.jpg')) }},
+                             btnText: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Shop Now' : 'Voir le shop') }},
+                             link: {{ \Illuminate\Support\Js::from(route('home')) }}
                          },
                          {
-                             tag: '{{ app()->getLocale() == 'en' ? 'Technology' : 'Technologie' }}',
-                             title: 'M1 ESSENTIALS',
-                             desc: '{{ app()->getLocale() == 'en' ? 'Premium laptops and smartphones inspected and guaranteed by our SafeMarket escrow.' : 'Ordinateurs portables et smartphones haut de gamme inspectés et garantis avec notre escrow SafeMarket.' }}',
-                             img: '{{ asset('images/products/macbook.jpg') }}',
-                             btnText: '{{ app()->getLocale() == 'en' ? 'Explore Tech' : 'Découvrir la tech' }}',
-                             link: '{{ route('home', ['category' => 'smartphones']) }}'
+                             tag: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Technology' : 'Technologie') }},
+                             title: {{ \Illuminate\Support\Js::from(__('M1 ESSENTIALS')) }},
+                             desc: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Premium laptops and smartphones inspected and guaranteed by our SafeMarket escrow.' : 'Ordinateurs portables et smartphones haut de gamme inspectés et garantis avec notre escrow SafeMarket.') }},
+                             img: {{ \Illuminate\Support\Js::from(asset('images/products/macbook.jpg')) }},
+                             btnText: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Explore Tech' : 'Découvrir la tech') }},
+                             link: {{ \Illuminate\Support\Js::from(route('home', ['category' => 'smartphones'])) }}
                          },
                          {
-                             tag: '{{ app()->getLocale() == 'en' ? 'Urban Sneakers' : 'Baskets Urbaines' }}',
-                             title: 'SNEAKER DROP',
-                             desc: '{{ app()->getLocale() == 'en' ? 'The most sought-after original pairs in limited editions to complete your style.' : 'Les paires originales les plus recherchées du moment en édition limitée pour compléter votre style.' }}',
-                             img: '{{ asset('images/products/nike.jpg') }}',
-                             btnText: '{{ app()->getLocale() == 'en' ? 'Shop Sneakers' : 'Acheter des sneakers' }}',
-                             link: '{{ route('home', ['category' => 'chaussures']) }}'
+                             tag: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Urban Sneakers' : 'Baskets Urbaines') }},
+                             title: {{ \Illuminate\Support\Js::from(__('SNEAKER DROP')) }},
+                             desc: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'The most sought-after original pairs in limited editions to complete your style.' : 'Les paires originales les plus recherchées du moment en édition limitée pour compléter votre style.') }},
+                             img: {{ \Illuminate\Support\Js::from(asset('images/products/nike.jpg')) }},
+                             btnText: {{ \Illuminate\Support\Js::from(app()->getLocale() == 'en' ? 'Shop Sneakers' : 'Acheter des sneakers') }},
+                             link: {{ \Illuminate\Support\Js::from(route('home', ['category' => 'chaussures'])) }}
                          }
                      ],
                      next() { this.currentSlide = (this.currentSlide + 1) % this.slides.length },
@@ -302,7 +302,7 @@
                             <!-- Card footer -->
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div class="space-y-1">
-                                    <span class="text-[10px] text-stone-400 dark:text-zinc-500 font-bold uppercase tracking-widest">{{ $product->category->name }}</span>
+                                    <span class="text-[10px] text-stone-400 dark:text-zinc-500 font-bold uppercase tracking-widest">{{ __($product->category->name) }}</span>
                                     <h3 class="font-heading font-extrabold text-base text-stone-950 dark:text-white uppercase leading-tight group-hover:text-red-600 transition-colors">
                                         @auth
                                             <a href="{{ route('products.show', $product) }}">{{ $product->title }}</a>
@@ -359,7 +359,7 @@
                             <!-- Card footer -->
                             <div class="p-6 flex-grow flex flex-col justify-between">
                                 <div class="space-y-1">
-                                    <span class="text-[10px] text-stone-400 dark:text-zinc-500 font-bold uppercase tracking-widest">{{ $product->category->name }}</span>
+                                    <span class="text-[10px] text-stone-400 dark:text-zinc-500 font-bold uppercase tracking-widest">{{ __($product->category->name) }}</span>
                                     <h3 class="font-heading font-extrabold text-base text-stone-950 dark:text-white uppercase leading-tight group-hover:text-red-600 transition-colors">
                                         @auth
                                             <a href="{{ route('products.show', $product) }}">{{ $product->title }}</a>

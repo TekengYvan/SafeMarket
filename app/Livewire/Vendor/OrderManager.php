@@ -34,11 +34,11 @@ class OrderManager extends Component
         // Send Notification to Buyer Client
         Notification::create([
             'user_id' => $order->buyer_id,
-            'title' => 'Commande expédiée 📦',
-            'content' => "Le commerçant a expédié votre commande pour le produit '{$order->product->title}'. Numéro de suivi : {$track}.",
+            'title' => \App\Support\LocalizedMessage::store('events.order_shipped_2'),
+            'content' => \App\Support\LocalizedMessage::store('events.the_seller_has_shipped_your_order_for_tracking_2', ['value1' => $order->product->title, 'value2' => $track]),
         ]);
 
-        session()->flash("status-{$orderId}", "Commande marquée comme expédiée.");
+        session()->flash("status-{$orderId}", __('Commande marquée comme expédiée.'));
     }
 
     public function deliverOrder($orderId)
@@ -54,11 +54,11 @@ class OrderManager extends Component
 
         Notification::create([
             'user_id' => $order->buyer_id,
-            'title' => 'Commande livrée 📦',
-            'content' => "Le commerçant a marqué votre commande pour le produit '{$order->product->title}' comme livrée. Veuillez confirmer la réception pour libérer les fonds.",
+            'title' => \App\Support\LocalizedMessage::store('events.order_delivered_2'),
+            'content' => \App\Support\LocalizedMessage::store('events.the_seller_has_marked_your_order_for_as_2', ['value1' => $order->product->title]),
         ]);
 
-        session()->flash("status-{$orderId}", "Commande marquée comme livrée.");
+        session()->flash("status-{$orderId}", __('Commande marquée comme livrée.'));
     }
 
     public function render()

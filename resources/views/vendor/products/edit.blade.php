@@ -27,13 +27,13 @@
                             <select id="category_id" name="category_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full text-sm">
                                 @foreach($categories as $parent)
                                     @if($parent->children->isNotEmpty())
-                                        <optgroup label="{{ $parent->name }}">
+                                        <optgroup label="{{ __($parent->name) }}">
                                             @foreach($parent->children as $sub)
-                                                <option value="{{ $sub->id }}" {{ old('category_id', $product->category_id) == $sub->id ? 'selected' : '' }}>{{ $sub->name }}</option>
+                                                <option value="{{ $sub->id }}" {{ old('category_id', $product->category_id) == $sub->id ? 'selected' : '' }}>{{ __($sub->name) }}</option>
                                             @endforeach
                                         </optgroup>
                                     @else
-                                        <option value="{{ $parent->id }}" {{ old('category_id', $product->category_id) == $parent->id ? 'selected' : '' }}>{{ $parent->name }}</option>
+                                        <option value="{{ $parent->id }}" {{ old('category_id', $product->category_id) == $parent->id ? 'selected' : '' }}>{{ __($parent->name) }}</option>
                                     @endif
                                 @endforeach
                             </select>

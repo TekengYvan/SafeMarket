@@ -61,8 +61,8 @@
                         <div>
                             <!-- Tags and Statuses -->
                             <div class="flex flex-wrap gap-2 mb-4 items-center">
-                                <span class="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{{ $product->category->name }}</span>
-                                <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{{ $product->condition }}</span>
+                                <span class="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{{ __($product->category->name) }}</span>
+                                <span class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{{ \App\Support\LocalizedMessage::status($product->condition) }}</span>
                                 
                                 @if($product->is_in_stock)
                                     <span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
@@ -175,7 +175,7 @@
                                             
                                             <div class="mb-4">
                                                 <label for="proposed_price" class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">{{ __('Votre proposition (FCFA)') }}</label>
-                                                <input id="proposed_price" type="number" step="0.01" name="proposed_price" required placeholder="Ex: {{ $product->price * 0.9 }}" class="border-gray-200 dark:border-gray-800 dark:bg-gray-950 focus:border-red-500 focus:ring-red-500 rounded-xl shadow-sm block w-full text-sm" />
+                                                <input id="proposed_price" type="number" step="0.01" name="proposed_price" required placeholder="{{ __('Ex: :value1', ['value1' => $product->price * 0.9]) }}" class="border-gray-200 dark:border-gray-800 dark:bg-gray-950 focus:border-red-500 focus:ring-red-500 rounded-xl shadow-sm block w-full text-sm" />
                                             </div>
                                             
                                             <div class="mb-4">

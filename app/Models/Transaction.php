@@ -12,4 +12,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getDescriptionAttribute(?string $value): ?string
+    {
+        return \App\Support\LocalizedMessage::render($value);
+    }
 }

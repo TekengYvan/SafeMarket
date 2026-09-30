@@ -34,7 +34,7 @@
                                 @elseif($order->status == 'delivered') bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400
                                 @elseif($order->status == 'completed') bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400
                                 @else bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200 @endif">
-                                {{ $order->status }}
+                                {{ \App\Support\LocalizedMessage::status($order->status) }}
                             </span>
                         </div>
 
@@ -92,7 +92,7 @@
                                         @csrf
                                         <div>
                                             <x-input-label for="tracking_number" :value="__('Numéro de suivi du colis')" />
-                                            <x-text-input id="tracking_number" class="block mt-1 w-full text-sm" type="text" name="tracking_number" required placeholder="Ex: SM-CAM-98421" />
+                                            <x-text-input id="tracking_number" class="block mt-1 w-full text-sm" type="text" name="tracking_number" required placeholder="{{ __('Ex: SM-CAM-98421') }}" />
                                         </div>
                                         <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-2xl shadow-md transition text-sm flex items-center justify-center gap-2">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -148,7 +148,7 @@
                                             <span class="font-mono text-xl font-black tracking-widest text-white">{{ $order->release_code }}</span>
                                             <button type="button" @click="navigator.clipboard.writeText('{{ $order->release_code }}'); copied = true; setTimeout(() => copied = false, 2000)" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg transition flex items-center gap-1">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                                                <span x-text="copied ? 'Copié !' : 'Copier'"></span>
+                                                <span data-copied="{{ __('Copié !') }}" data-copy="{{ __('Copier') }}" x-text="copied ? $el.dataset.copied : $el.dataset.copy"></span>
                                             </button>
                                         </div>
                                     </div>
@@ -158,7 +158,7 @@
                                         @csrf
                                         <div>
                                             <x-input-label for="release_code" :value="__('Entrez le Code de Libération pour Valider')" />
-                                            <x-text-input id="release_code" class="block mt-1 w-full text-sm font-mono tracking-widest" type="text" name="release_code" required placeholder="Ex: {{ $order->release_code }}" />
+                                            <x-text-input id="release_code" class="block mt-1 w-full text-sm font-mono tracking-widest" type="text" name="release_code" required placeholder="{{ __('Ex: :value1', ['value1' => $order->release_code]) }}" />
                                         </div>
                                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl shadow-md transition text-sm flex items-center justify-center gap-2">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>

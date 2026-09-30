@@ -16,11 +16,11 @@ class NegotiationService
         $product = Product::findOrFail($data['product_id']);
 
         if ($product->vendor_id === Auth::id()) {
-            throw new \Exception('Vous ne pouvez pas négocier votre propre produit.');
+            throw new \Exception(__('Vous ne pouvez pas négocier votre propre produit.'));
         }
 
         if ($product->status !== 'available' || ! $product->is_in_stock) {
-            throw new \Exception('Ce produit n’est plus disponible à la négociation.');
+            throw new \Exception(__('Ce produit n’est plus disponible à la négociation.'));
         }
 
         return DB::transaction(function () use ($data, $product) {
@@ -45,8 +45,8 @@ class NegotiationService
             try {
                 Notification::create([
                     'user_id' => $product->vendor_id,
-                    'title' => 'Nouvelle offre de négociation',
-                    'content' => (Auth::user()->name ?? 'Un client') . " vous propose " . number_format($data['proposed_price'], 0, ',', ' ') . " FCFA pour '" . $product->title . "'.",
+                    'title' => \App\Support\LocalizedMessage::store('events.new_negotiation_offer'),
+                    'content' => \App\Support\LocalizedMessage::store('events.offers_you_fcfa_for', ['value1' => (Auth::user()->name ?? __('Un client')), 'value2' => number_format($data['proposed_price'], 0, ',', ' '), 'value3' => $product->title]),
                 ]);
             } catch (\Throwable $e) {
                 // Ignore notification error to not break transaction
@@ -70,8 +70,8 @@ class NegotiationService
         try {
             Notification::create([
                 'user_id' => $recipientId,
-                'title' => 'Nouveau message de négociation',
-                'content' => (Auth::user()->name ?? 'Un utilisateur') . " vous a envoyé un message concernant '" . ($negotiation->product->title ?? 'un produit') . "'.",
+                'title' => \App\Support\LocalizedMessage::store('events.new_negotiation_message'),
+                'content' => \App\Support\LocalizedMessage::store('events.sent_you_a_message_about', ['value1' => (Auth::user()->name ?? __('Un utilisateur')), 'value2' => ($negotiation->product->title ?? __('un produit'))]),
             ]);
         } catch (\Throwable $e) {
             // Ignore
@@ -83,15 +83,15 @@ class NegotiationService
     public function updateStatus(Negotiation $negotiation, string $status): bool
     {
         if ($negotiation->status !== 'pending') {
-            throw new \Exception('Cette négociation est déjà terminée.');
+            throw new \Exception(__('Cette négociation est déjà terminée.'));
         }
         if ($status === 'cancelled') {
             if ($negotiation->buyer_id !== Auth::id()) {
-                throw new \Exception('Seul l\'acheteur peut annuler une négociation.');
+                throw new \Exception(__('Seul l\'acheteur peut annuler une négociation.'));
             }
         } else {
             if ($negotiation->seller_id !== Auth::id()) {
-                throw new \Exception('Seul le vendeur peut accepter ou rejeter une proposition.');
+                throw new \Exception(__('Seul le vendeur peut accepter ou rejeter une proposition.'));
             }
         }
 
@@ -109,8 +109,8 @@ class NegotiationService
             try {
                 Notification::create([
                     'user_id' => $recipientId,
-                    'title' => "Négociation {$statusText}",
-                    'content' => "The offer for'" . ($negotiation->product->title ?? 'the product') . "' has been {$statusText}.",
+                    'title' => \App\Support\LocalizedMessage::store('events.negotiation', ['value1' => \App\Support\LocalizedMessage::label($statusText)]),
+                    'content' => \App\Support\LocalizedMessage::store('events.the_offer_for_has_been_2', ['value1' => ($negotiation->product->title ?? __('the product')), 'value2' => \App\Support\LocalizedMessage::label($statusText)]),
                 ]);
             } catch (\Throwable $e) {
                 // Ignore

@@ -45,7 +45,7 @@
                                     @elseif($order->status == 'shipped') {{ __('Expédié') }}
                                     @elseif($order->status == 'delivered') {{ __('Livré') }}
                                     @elseif($order->status == 'completed') {{ __('Terminé') }}
-                                    @else {{ $order->status }} @endif
+                                    @else {{ \App\Support\LocalizedMessage::status($order->status) }} @endif
                                 </span>
                             </td>
                             <td class="py-4">

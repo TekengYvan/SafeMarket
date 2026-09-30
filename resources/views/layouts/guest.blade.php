@@ -19,6 +19,10 @@
           x-init="$watch('darkMode', val => localStorage.setItem('dark', val))" 
           :class="{ 'dark': darkMode }">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+            <nav aria-label="{{ __('Choose language') }}" class="flex justify-center gap-3 py-4">
+                <a href="{{ route('lang.switch', 'en') }}" lang="en" class="font-bold {{ app()->getLocale() === 'en' ? 'text-red-600' : 'text-gray-500' }}">English</a>
+                <a href="{{ route('lang.switch', 'fr') }}" lang="fr" class="font-bold {{ app()->getLocale() === 'fr' ? 'text-red-600' : 'text-gray-500' }}">Français</a>
+            </nav>
             {{ $slot }}
         </div>
     </body>

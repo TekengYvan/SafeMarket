@@ -53,8 +53,8 @@ class NegotiationChat extends Component
 
         Notification::create([
             'user_id' => $recipientId,
-            'title' => 'Nouveau message de négociation',
-            'content' => Auth::user()->name . " vous a envoyé un message concernant '" . $this->negotiation->product->title . "'.",
+            'title' => \App\Support\LocalizedMessage::store('events.new_negotiation_message'),
+            'content' => \App\Support\LocalizedMessage::store('events.sent_you_a_message_about', ['value1' => Auth::user()->name, 'value2' => $this->negotiation->product->title]),
         ]);
 
         $this->dispatch('messageSent');
@@ -83,8 +83,8 @@ class NegotiationChat extends Component
 
         Notification::create([
             'user_id' => Auth::id() === $this->negotiation->buyer_id ? $this->negotiation->seller_id : $this->negotiation->buyer_id,
-            'title' => "Négociation {$statusText}",
-            'content' => "La proposition pour '" . $this->negotiation->product->title . "' a été {$statusText}.",
+            'title' => \App\Support\LocalizedMessage::store('events.negotiation', ['value1' => \App\Support\LocalizedMessage::label($statusText)]),
+            'content' => \App\Support\LocalizedMessage::store('events.the_offer_for_has_been', ['value1' => $this->negotiation->product->title, 'value2' => \App\Support\LocalizedMessage::label($statusText)]),
         ]);
     }
 

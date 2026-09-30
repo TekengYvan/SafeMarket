@@ -66,7 +66,7 @@
                                 @endif
                                 @forelse($user->roles as $role)
                                     @if($role->name !== 'admin')
-                                        <span class="text-[9px] bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">{{ $role->name }}</span>
+                                        <span class="text-[9px] bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-400 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">{{ \App\Support\LocalizedMessage::status($role->name) }}</span>
                                     @endif
                                 @empty
                                     <span class="text-[9px] bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-0.5 rounded-full uppercase font-bold">{{ __('Membre') }}</span>
@@ -117,7 +117,7 @@
                                     </button>
 
                                     <!-- Delete Button -->
-                                    <button onclick="confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?') || event.stopImmediatePropagation()" 
+                                    <button data-confirm="{{ __('Êtes-vous sûr de vouloir supprimer cet utilisateur ?') }}" onclick="confirm(this.dataset.confirm) || event.stopImmediatePropagation()"
                                             wire:click="deleteUser({{ $user->id }})" 
                                             class="p-1.5 text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition" 
                                             title="{{ __('Supprimer') }}">

@@ -87,7 +87,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         if ($product->vendor_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         $request->validate([
@@ -108,7 +108,7 @@ class ProductController extends Controller
     public function destroy(Request $request, Product $product)
     {
         if ($product->vendor_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         // Delete images from storage
@@ -118,6 +118,6 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return response()->json(['message' => 'Product deleted successfully']);
+        return response()->json(['message' => __('Product deleted successfully')]);
     }
 }

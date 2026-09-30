@@ -34,7 +34,7 @@
                                         @elseif($neg->status == 'accepted') bg-green-100 text-green-800
                                         @elseif($neg->status == 'rejected') bg-red-100 text-red-800
                                         @else bg-gray-100 text-gray-800 @endif">
-                                        {{ $neg->status }}
+                                        {{ \App\Support\LocalizedMessage::status($neg->status) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm font-medium flex space-x-2">

@@ -22,17 +22,17 @@ class KycVerification extends Component
         }
 
         // Send Notification to User
-        $title = $status === 'verified' ? 'Compte commerçant validé ! 🎉' : 'Dossier KYC rejeté ⚠️';
+        $title = $status === 'verified' ? \App\Support\LocalizedMessage::store('events.seller_account_verified') : \App\Support\LocalizedMessage::store('events.identity_verification_rejected');
         $content = $status === 'verified' 
-            ? 'Félicitations, vos pièces d\'identité ont été validées. Vous pouvez maintenant accéder à votre boutique vendeur.'
-            : 'Malheureusement, vos pièces d\'identité ont été rejetées. Veuillez soumettre un document conforme dans votre profil.';
+            ? \App\Support\LocalizedMessage::store('events.congratulations_your_identity_documents_have_been_verified_you')
+            : \App\Support\LocalizedMessage::store('events.your_identity_documents_were_rejected_please_submit_a');
         \App\Models\Notification::create([
             'user_id' => $user->id,
             'title' => $title,
             'content' => $content,
         ]);
 
-        session()->flash('status', "Le statut KYC de {$user->name} a été mis à jour : {$status}");
+        session()->flash('status', __('Le statut KYC de :value1 a été mis à jour : :value2', ['value1' => $user->name, 'value2' => \App\Support\LocalizedMessage::status($status)]));
     }
 
     public function render()

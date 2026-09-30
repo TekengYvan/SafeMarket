@@ -114,7 +114,7 @@ class ProductManager extends Component
 
         $this->resetForm();
         $this->loadProducts();
-        session()->flash('status', 'Produit ajouté avec succès.');
+        session()->flash('status', __('Produit ajouté avec succès.'));
     }
 
     public function edit($id)
@@ -197,7 +197,7 @@ class ProductManager extends Component
 
         $this->resetForm();
         $this->loadProducts();
-        session()->flash('status', 'Produit mis à jour avec succès.');
+        session()->flash('status', __('Produit mis à jour avec succès.'));
     }
 
     public function delete($id)
@@ -208,7 +208,7 @@ class ProductManager extends Component
         }
         $product->delete();
         $this->loadProducts();
-        session()->flash('status', 'Produit supprimé avec succès.');
+        session()->flash('status', __('Produit supprimé avec succès.'));
     }
 
     public function render()

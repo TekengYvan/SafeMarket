@@ -34,7 +34,7 @@
                                             @elseif($order->status == 'delivered') bg-emerald-100 text-emerald-800
                                             @elseif($order->status == 'completed') bg-green-100 text-green-800
                                             @else bg-gray-100 text-gray-800 @endif">
-                                            {{ $order->status }}
+                                            {{ \App\Support\LocalizedMessage::status($order->status) }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 flex items-center gap-3">
@@ -79,7 +79,7 @@
                                             @elseif($order->status == 'delivered') bg-emerald-100 text-emerald-800
                                             @elseif($order->status == 'completed') bg-green-100 text-green-800
                                             @else bg-gray-100 text-gray-800 @endif">
-                                            {{ $order->status }}
+                                            {{ \App\Support\LocalizedMessage::status($order->status) }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 flex items-center gap-3">

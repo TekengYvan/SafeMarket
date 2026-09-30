@@ -26,14 +26,14 @@ class UserManagement extends Component
             $user->removeRole('admin');
         }
 
-        session()->flash('status', "Le statut administrateur de {$user->name} a été mis à jour.");
+        session()->flash('status', __('Le statut administrateur de :value1 a été mis à jour.', ['value1' => $user->name]));
     }
 
     public function toggleSuspend($userId)
     {
         $user = User::findOrFail($userId);
         if ($user->id === auth()->id()) {
-            session()->flash('error', "Vous ne pouvez pas vous auto-suspendre.");
+            session()->flash('error', __('Vous ne pouvez pas vous auto-suspendre.'));
             return;
         }
 
@@ -41,18 +41,18 @@ class UserManagement extends Component
         $user->save();
 
         $action = $user->is_suspended ? 'suspendu' : 'réactivé';
-        session()->flash('status', "Le compte de {$user->name} a été {$action} avec succès.");
+        session()->flash('status', __('Le compte de :value1 a été :value2 avec succès.', ['value1' => $user->name, 'value2' => \App\Support\LocalizedMessage::status($action)]));
     }
 
     public function deleteUser($userId)
     {
         $user = User::findOrFail($userId);
         if ($user->id === auth()->id()) {
-            session()->flash('error', "Vous ne pouvez pas supprimer votre propre compte.");
+            session()->flash('error', __('Vous ne pouvez pas supprimer votre propre compte.'));
             return;
         }
         $user->delete();
-        session()->flash('status', "Utilisateur supprimé avec succès.");
+        session()->flash('status', __('Utilisateur supprimé avec succès.'));
     }
 
     public function render()

@@ -16,7 +16,7 @@
             <select wire:model="parent_id" class="border-gray-200 dark:border-gray-800 dark:bg-gray-950 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm w-full h-11 text-sm text-gray-700 dark:text-gray-300">
                 <option value="">{{ __('-- Catégorie principale (Aucun parent) --') }}</option>
                 @foreach($parentCategories as $parent)
-                    <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                    <option value="{{ $parent->id }}">{{ __($parent->name) }}</option>
                 @endforeach
             </select>
             <x-input-error :messages="$errors->get('parent_id')" class="mt-2" />
@@ -30,9 +30,9 @@
                 <div class="flex justify-between items-center pb-3 border-b border-gray-200/50 dark:border-gray-800/50 mb-3">
                     <span class="font-extrabold text-gray-900 dark:text-white text-base flex items-center gap-2">
                         <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                        {{ $category->name }}
+                        {{ __($category->name) }}
                     </span>
-                    <button onclick="confirm('Supprimer cette catégorie principale ainsi que ses sous-catégories ?') || event.stopImmediatePropagation()" wire:click="delete({{ $category->id }})" class="text-rose-500 hover:text-rose-700 p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 transition">
+                    <button data-confirm="{{ __('Supprimer cette catégorie principale ainsi que ses sous-catégories ?') }}" onclick="confirm(this.dataset.confirm) || event.stopImmediatePropagation()" wire:click="delete({{ $category->id }})" class="text-rose-500 hover:text-rose-700 p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
                 </div>
@@ -43,9 +43,9 @@
                             <div class="flex justify-between items-center bg-white dark:bg-gray-950 px-4 py-2.5 rounded-xl border border-gray-150 dark:border-gray-800/80 shadow-sm">
                                 <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
                                     <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                    {{ $sub->name }}
+                                    {{ __($sub->name) }}
                                 </span>
-                                <button onclick="confirm('Supprimer cette sous-catégorie ?') || event.stopImmediatePropagation()" wire:click="delete({{ $sub->id }})" class="text-rose-500 hover:text-rose-700 transition p-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/20">
+                                <button data-confirm="{{ __('Supprimer cette sous-catégorie ?') }}" onclick="confirm(this.dataset.confirm) || event.stopImmediatePropagation()" wire:click="delete({{ $sub->id }})" class="text-rose-500 hover:text-rose-700 transition p-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/20">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </div>

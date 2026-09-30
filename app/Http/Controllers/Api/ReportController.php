@@ -17,7 +17,7 @@ class ReportController extends Controller
         ]);
 
         if ($request->reported_id === $request->user()->id) {
-            return response()->json(['message' => 'You cannot report yourself'], 400);
+            return response()->json(['message' => __('You cannot report yourself')], 400);
         }
 
         $report = Report::create([
@@ -29,7 +29,7 @@ class ReportController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Report submitted successfully. Our team will review it.',
+            'message' => __('Report submitted successfully. Our team will review it.'),
             'report' => $report
         ], 201);
     }
@@ -37,7 +37,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if (!$request->user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         $reports = Report::with(['reporter', 'reported', 'product'])->latest()->get();

@@ -30,13 +30,13 @@ class DisputeManager extends Component
                     'payment_method' => 'wallet',
                     'reference' => 'REF-' . strtoupper(Str::random(10)),
                     'status' => 'successful',
-                    'description' => "Remboursement suite à litige pour commande #{$order->id}",
+                    'description' => \App\Support\LocalizedMessage::store('events.refund_following_a_dispute_for_order', ['value1' => $order->id]),
                 ]);
 
                 Notification::create([
                     'user_id' => $order->buyer_id,
-                    'title' => 'Litige résolu en votre faveur ⚖️',
-                    'content' => "L'administrateur a validé votre litige pour '{$order->product->title}'. Le montant de " . number_format($order->amount, 2) . " FCFA a été recrédité sur votre Wallet.",
+                    'title' => \App\Support\LocalizedMessage::store('events.dispute_resolved_in_your_favour'),
+                    'content' => \App\Support\LocalizedMessage::store('events.the_administrator_approved_your_dispute_for_fcfa_has', ['value1' => $order->product->title, 'value2' => number_format($order->amount, 2)]),
                 ]);
             } else {
                 // Release to vendor (minus 5% tax)
@@ -54,7 +54,7 @@ class DisputeManager extends Component
                         'payment_method' => 'wallet',
                         'reference' => 'TAX-' . strtoupper(Str::random(10)),
                         'status' => 'successful',
-                        'description' => "Commission arbitrage 5% sur commande #{$order->id}",
+                        'description' => \App\Support\LocalizedMessage::store('events.arbitration_commission_on_order', ['value1' => $order->id]),
                     ]);
                 }
                 
@@ -68,7 +68,7 @@ class DisputeManager extends Component
                         'payment_method' => 'wallet',
                         'reference' => 'REL-' . strtoupper(Str::random(10)),
                         'status' => 'successful',
-                        'description' => "Versement vente après arbitrage pour commande #{$order->id}",
+                        'description' => \App\Support\LocalizedMessage::store('events.sale_payment_after_arbitration_for_order', ['value1' => $order->id]),
                     ]);
                 }
 
@@ -76,13 +76,13 @@ class DisputeManager extends Component
 
                 Notification::create([
                     'user_id' => $order->product->vendor_id,
-                    'title' => 'Litige tranché en votre faveur ⚖️',
-                    'content' => "L'administrateur a tranché le litige pour '{$order->product->title}' en votre faveur. Le montant net de " . number_format($vendorAmount, 2) . " FCFA a été versé sur votre solde.",
+                    'title' => \App\Support\LocalizedMessage::store('events.dispute_decided_in_your_favour'),
+                    'content' => \App\Support\LocalizedMessage::store('events.the_administrator_decided_the_dispute_for_in_your', ['value1' => $order->product->title, 'value2' => number_format($vendorAmount, 2)]),
                 ]);
             }
         });
 
-        session()->flash('status', 'Litige résolu avec succès.');
+        session()->flash('status', __('Litige résolu avec succès.'));
     }
 
     public function render()

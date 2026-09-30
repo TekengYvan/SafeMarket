@@ -51,7 +51,7 @@ class NegotiationController extends Controller
     {
         try {
             $this->negotiationService->createNegotiation($request->validated());
-            return back()->with('status', 'Votre proposition a été envoyée au vendeur.');
+            return back()->with('status', __('Votre proposition a été envoyée au vendeur.'));
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -61,7 +61,7 @@ class NegotiationController extends Controller
     {
         try {
             $this->negotiationService->updateStatus($negotiation, $request->validated()['status']);
-            return back()->with('status', "La proposition a été {$request->status}.");
+            return back()->with('status', __('La proposition a été :value1.', ['value1' => \App\Support\LocalizedMessage::status($request->status)]));
         } catch (\Exception $e) {
             abort(403, $e->getMessage());
         }

@@ -81,13 +81,13 @@
                         <option value="">{{ __('Sélectionnez une catégorie') }}</option>
                         @foreach($categories as $parent)
                             @if($parent->children->isNotEmpty())
-                                <optgroup label="{{ $parent->name }}">
+                                <optgroup label="{{ __($parent->name) }}">
                                     @foreach($parent->children as $sub)
-                                        <option value="{{ $sub->id }}">{{ $sub->name }}</option>
+                                        <option value="{{ $sub->id }}">{{ __($sub->name) }}</option>
                                     @endforeach
                                 </optgroup>
                             @else
-                                <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                                <option value="{{ $parent->id }}">{{ __($parent->name) }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -215,7 +215,7 @@
                         
                         <div class="absolute top-3.5 left-3.5 flex flex-col gap-1.5 z-10">
                             <span class="px-3 py-1 text-[10px] font-extrabold rounded-full uppercase tracking-wider shadow-sm {{ $product->status == 'available' ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-white' }}">
-                                {{ $product->status == 'available' ? __('Disponible') : $product->status }}
+                                {{ \App\Support\LocalizedMessage::status($product->status) }}
                             </span>
                             @if($product->is_on_sale)
                                 <span class="px-2.5 py-1 text-[10px] font-extrabold rounded-full uppercase tracking-wider bg-red-600 text-white shadow-md shadow-red-500/30 flex items-center gap-1">
@@ -273,7 +273,7 @@
                         <span>{{ __('Modifier') }}</span>
                     </button>
 
-                    <button onclick="confirm('{{ __('Voulez-vous vraiment supprimer ce produit ?') }}') || event.stopImmediatePropagation()" wire:click="delete({{ $product->id }})" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-rose-600 dark:text-rose-400 hover:text-rose-700 transition">
+                    <button data-confirm="{{ __('Voulez-vous vraiment supprimer ce produit ?') }}" onclick="confirm(this.dataset.confirm) || event.stopImmediatePropagation()" wire:click="delete({{ $product->id }})" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-rose-600 dark:text-rose-400 hover:text-rose-700 transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         <span>{{ __('Supprimer') }}</span>
                     </button>

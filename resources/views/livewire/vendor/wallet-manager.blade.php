@@ -229,13 +229,13 @@
                                 @elseif($tx->type === 'withdrawal')
                                     <span class="text-rose-600 dark:text-rose-400">{{ __('Retrait') }}</span>
                                 @else
-                                    <span>{{ $tx->type }}</span>
+                                    <span>{{ \App\Support\LocalizedMessage::status($tx->type) }}</span>
                                 @endif
                             </td>
                             <td class="py-3.5 px-4 font-bold {{ $tx->type === 'deposit' ? 'text-emerald-600' : 'text-stone-900 dark:text-white' }}">
                                 {{ $tx->type === 'deposit' ? '+' : '-' }} {{ number_format($tx->amount, 2) }} FCFA
                             </td>
-                            <td class="py-3.5 px-4 uppercase font-bold text-stone-500">{{ $tx->payment_method }}</td>
+                            <td class="py-3.5 px-4 uppercase font-bold text-stone-500">{{ \App\Support\LocalizedMessage::status($tx->payment_method) }}</td>
                             <td class="py-3.5 px-4">
                                 <div class="flex items-center gap-2">
                                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase inline-flex items-center gap-1
@@ -245,7 +245,7 @@
                                         @if($tx->status === 'pending')
                                             <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
                                         @endif
-                                        {{ $tx->status }}
+                                        {{ \App\Support\LocalizedMessage::status($tx->status) }}
                                     </span>
 
                                     @if($tx->status === 'pending')

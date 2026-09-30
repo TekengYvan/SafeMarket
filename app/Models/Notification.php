@@ -22,4 +22,14 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getTitleAttribute(?string $value): ?string
+    {
+        return \App\Support\LocalizedMessage::render($value);
+    }
+
+    public function getContentAttribute(?string $value): ?string
+    {
+        return \App\Support\LocalizedMessage::render($value);
+    }
 }

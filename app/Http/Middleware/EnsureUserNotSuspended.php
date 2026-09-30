@@ -19,7 +19,7 @@ class EnsureUserNotSuspended
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('login')->with('error', 'Votre compte a été suspendu par l\'administration. Veuillez contacter le support.');
+            return redirect()->route('login')->with('error', __('Votre compte a été suspendu par l\'administration. Veuillez contacter le support.'));
         }
 
         return $next($request);

@@ -145,12 +145,12 @@ class CartComponent extends Component
                 $this->pendingTxId = $tx->id;
                 $this->pendingTxReference = $tx->reference;
                 $this->isWaitingPayment = true;
-                $this->paymentStatusMessage = $tx->description ?? "📱 Demande envoyée à votre téléphone ({$this->phone}) ! Veuillez composer votre code secret Mobile Money pour valider le paiement.";
+                $this->paymentStatusMessage = $tx->description ?? __('📱 Demande envoyée à votre téléphone (:value1) ! Veuillez composer votre code secret Mobile Money pour valider le paiement.', ['value1' => $this->phone]);
             } else {
-                $this->paymentErrorMessage = $tx->description ?? 'Échec de l\'envoi de la demande Mobile Money.';
+                $this->paymentErrorMessage = $tx->description ?? __('Échec de l\'envoi de la demande Mobile Money.');
             }
         } catch (\Exception $e) {
-            $this->paymentErrorMessage = 'Erreur: ' . $e->getMessage();
+            $this->paymentErrorMessage = __('Erreur: :value1', ['value1' => $e->getMessage()]);
         }
     }
 
@@ -178,7 +178,7 @@ class CartComponent extends Component
         } elseif ($updatedTx->status === 'failed') {
             $this->isWaitingPayment = false;
             $this->pendingTxId = null;
-            $this->paymentErrorMessage = '❌ Le paiement Mobile Money a été refusé, annulé ou a expiré sur votre téléphone.';
+            $this->paymentErrorMessage = __('❌ Le paiement Mobile Money a été refusé, annulé ou a expiré sur votre téléphone.');
         }
     }
 
@@ -197,7 +197,7 @@ class CartComponent extends Component
         $this->loadCart();
 
         if ($user->balance < $this->total) {
-            $this->paymentErrorMessage = 'Solde insuffisant pour finaliser l\'ESCROW.';
+            $this->paymentErrorMessage = __('Solde insuffisant pour finaliser l\'ESCROW.');
             return;
         }
 
@@ -213,7 +213,7 @@ class CartComponent extends Component
                 'payment_method' => $this->paymentMethod === 'campay' ? $this->campayMethod : 'wallet',
                 'reference' => 'ESC-' . strtoupper(Str::random(10)),
                 'status' => 'successful',
-                'description' => "Séquestre ESCROW pour " . $this->cartItems->count() . " article(s) commandé(s)",
+                'description' => \App\Support\LocalizedMessage::store('events.escrow_hold_for_ordered_item_s', ['value1' => $this->cartItems->count()]),
             ]);
 
             foreach ($this->cartItems as $item) {
@@ -234,8 +234,8 @@ class CartComponent extends Component
                 // Notify Vendor
                 Notification::create([
                     'user_id' => $item->product->vendor_id,
-                    'title' => 'Nouveau produit vendu ! 🛍️',
-                    'content' => "Votre produit '{$item->product->title}' a été acheté par {$user->name}. Téléphone: {$this->phone}, Lieu: {$this->location}. Veuillez préparer l'expédition.",
+                    'title' => \App\Support\LocalizedMessage::store('events.new_product_sold'),
+                    'content' => \App\Support\LocalizedMessage::store('events.your_product_was_purchased_by_phone_location_please', ['value1' => $item->product->title, 'value2' => $user->name, 'value3' => $this->phone, 'value4' => $this->location]),
                 ]);
 
                 // Mark product as sold
@@ -246,7 +246,7 @@ class CartComponent extends Component
             $user->cartItems()->delete();
         });
 
-        session()->flash('status', '🎉 Commande passée avec succès ! Vos fonds sont sécurisés en ESCROW.');
+        session()->flash('status', __('🎉 Commande passée avec succès ! Vos fonds sont sécurisés en ESCROW.'));
         return redirect()->route('orders.index');
     }
 

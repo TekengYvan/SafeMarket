@@ -46,7 +46,7 @@
                             <td class="py-3 text-xs text-gray-500">{{ $sale->created_at->format('d/m/Y H:i') }}</td>
                             <td class="py-3 text-[10px] font-bold uppercase">
                                 <span class="px-2 py-0.5 rounded-full {{ $sale->status == 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ $sale->status }}
+                                    {{ \App\Support\LocalizedMessage::status($sale->status) }}
                                 </span>
                             </td>
                         </tr>

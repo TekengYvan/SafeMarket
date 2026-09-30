@@ -42,7 +42,7 @@ class CategoryManager extends Component
 
         $this->reset(['name', 'parent_id']);
         $this->loadCategories();
-        session()->flash('status', 'Catégorie / sous-catégorie créée.');
+        session()->flash('status', __('Catégorie / sous-catégorie créée.'));
     }
 
     public function delete($id)

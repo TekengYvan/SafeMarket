@@ -11,7 +11,7 @@ class AdminController extends Controller
     public function indexPendingKYC(Request $request)
     {
         if (!$request->user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         $pending = User::where('kyc_status', 'pending')
@@ -24,7 +24,7 @@ class AdminController extends Controller
     public function verifyKYC(Request $request, User $user)
     {
         if (!$request->user()->is_admin) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         $request->validate([
@@ -35,7 +35,7 @@ class AdminController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => "KYC status updated to {$request->status}",
+            'message' => __('KYC status updated to :status', ['status' => \App\Support\LocalizedMessage::status($request->status)]),
             'user' => $user
         ]);
     }

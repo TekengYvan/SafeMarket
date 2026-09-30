@@ -45,7 +45,7 @@ class CartController extends Controller
         $product = Product::findOrFail($request->product_id);
         
         if ($product->vendor_id === auth()->id()) {
-            return back()->with('error', 'Vous ne pouvez pas acheter votre propre produit.');
+            return back()->with('error', __('Vous ne pouvez pas acheter votre propre produit.'));
         }
 
         // Check for accepted negotiation
@@ -65,9 +65,9 @@ class CartController extends Controller
             ]);
         }
 
-        $message = 'Produit ajouté au panier.';
+        $message = __('Produit ajouté au panier.');
         if ($negotiation) {
-            $message .= ' Le prix négocié de ' . number_format($negotiation->proposed_price, 2) . ' FCFA sera appliqué.';
+            $message .= __(' Le prix négocié de :value1 FCFA sera appliqué.', ['value1' => number_format($negotiation->proposed_price, 2)]);
         }
 
         return redirect()->route('cart.index')->with('status', $message);
@@ -80,7 +80,7 @@ class CartController extends Controller
         }
 
         $cartItem->delete();
-        return back()->with('status', 'Produit retiré du panier.');
+        return back()->with('status', __('Produit retiré du panier.'));
     }
 
     public function checkout(Request $request)
@@ -95,7 +95,7 @@ class CartController extends Controller
         $cartItems = $user->cartItems()->with('product')->get();
         
         if ($cartItems->isEmpty()) {
-            return back()->with('error', 'Votre panier est vide.');
+            return back()->with('error', __('Votre panier est vide.'));
         }
 
         $productIds = $cartItems->pluck('product_id');
@@ -118,16 +118,16 @@ class CartController extends Controller
             try {
                 $tx = $campayService->deposit($user, (float)$total, $request->phone, 'momo');
                 if ($tx->status === 'pending') {
-                    return redirect()->route('cart.index')->with('status', "📱 Demande Mobile Money envoyée à votre numéro {$request->phone}. Veuillez valider avec votre code secret pour finaliser la commande.");
+                    return redirect()->route('cart.index')->with('status', __('📱 Demande Mobile Money envoyée à votre numéro :value1. Veuillez valider avec votre code secret pour finaliser la commande.', ['value1' => $request->phone]));
                 }
                 $user->refresh();
             } catch (\Exception $e) {
-                return back()->with('error', 'Échec du paiement Mobile Money via Campay : ' . $e->getMessage());
+                return back()->with('error', __('Échec du paiement Mobile Money via Campay : :value1', ['value1' => $e->getMessage()]));
             }
         }
 
         if ($user->balance < $total) {
-            return back()->with('error', 'Solde insuffisant dans votre Wallet. Veuillez recharger votre solde ou utiliser le paiement Mobile Money direct.');
+            return back()->with('error', __('Solde insuffisant dans votre Wallet. Veuillez recharger votre solde ou utiliser le paiement Mobile Money direct.'));
         }
 
         DB::transaction(function () use ($user, $cartItems, $negotiations, $total, $request) {
@@ -142,7 +142,7 @@ class CartController extends Controller
                 'payment_method' => 'wallet',
                 'reference' => 'ESC-' . strtoupper(Str::random(10)),
                 'status' => 'successful',
-                'description' => "Séquestre ESCROW pour " . $cartItems->count() . " article(s) commandé(s)",
+                'description' => \App\Support\LocalizedMessage::store('events.escrow_hold_for_ordered_item_s', ['value1' => $cartItems->count()]),
             ]);
 
             foreach ($cartItems as $item) {
@@ -163,8 +163,8 @@ class CartController extends Controller
                 // Notify Vendor
                 \App\Models\Notification::create([
                     'user_id' => $item->product->vendor_id,
-                    'title' => 'Nouveau produit vendu ! 🛍️',
-                    'content' => "Votre produit '{$item->product->title}' a été acheté par {$user->name}. Téléphone: {$request->phone}, Lieu: {$request->location}. Veuillez préparer l'expédition.",
+                    'title' => \App\Support\LocalizedMessage::store('events.new_product_sold'),
+                    'content' => \App\Support\LocalizedMessage::store('events.your_product_was_purchased_by_phone_location_please', ['value1' => $item->product->title, 'value2' => $user->name, 'value3' => $request->phone, 'value4' => $request->location]),
                 ]);
 
                 // Mark product as sold
@@ -175,6 +175,6 @@ class CartController extends Controller
             $user->cartItems()->delete();
         });
 
-        return redirect()->route('orders.index')->with('status', 'Commande passée avec succès ! Vos fonds sont en ESCROW.');
+        return redirect()->route('orders.index')->with('status', __('Commande passée avec succès ! Vos fonds sont en ESCROW.'));
     }
 }

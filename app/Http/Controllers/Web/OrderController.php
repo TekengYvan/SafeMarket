@@ -42,7 +42,7 @@ class OrderController extends Controller
     {
         $this->orderService->shipOrder($order, $request->validated()['tracking_number']);
 
-        return back()->with('status', 'Commande marquée comme expédiée.');
+        return back()->with('status', __('Commande marquée comme expédiée.'));
     }
 
     public function deliver(Order $order)
@@ -53,14 +53,14 @@ class OrderController extends Controller
 
         $this->orderService->deliverOrder($order);
 
-        return back()->with('status', 'Commande marquée comme livrée. En attente de confirmation de l\'acheteur.');
+        return back()->with('status', __('Commande marquée comme livrée. En attente de confirmation de l\'acheteur.'));
     }
 
     public function complete(CompleteOrderRequest $request, Order $order)
     {
         try {
             $this->orderService->completeOrder($order, $request->validated()['release_code']);
-            return back()->with('status', 'Commande terminée. Les fonds (moins 5% de taxe plateforme) ont été libérés au vendeur.');
+            return back()->with('status', __('Commande terminée. Les fonds (moins 5% de taxe plateforme) ont été libérés au vendeur.'));
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }

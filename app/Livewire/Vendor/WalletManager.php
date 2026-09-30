@@ -53,13 +53,13 @@ class WalletManager extends Component
 
             if ($tx->status === 'successful') {
                 $this->activePendingTxId = null;
-                session()->flash('status', "✅ Recharge de " . number_format($this->depositAmount, 0, ',', ' ') . " FCFA créditée avec succès sur votre wallet !");
+                session()->flash('status', __('✅ Recharge de :value1 FCFA créditée avec succès sur votre wallet !', ['value1' => number_format($this->depositAmount, 0, ',', ' ')]));
             } elseif ($tx->status === 'pending') {
                 $this->activePendingTxId = $tx->id;
-                session()->flash('status', "📱 Demande envoyée à votre téléphone ! Veuillez confirmer le paiement de " . number_format($this->depositAmount, 0, ',', ' ') . " FCFA sur votre téléphone ({$this->depositPhone}) en validant avec votre code secret Mobile Money.");
+                session()->flash('status', $tx->description ?: __('📱 Demande envoyée à votre téléphone ! Veuillez confirmer le paiement de :value1 FCFA sur votre téléphone (:value2) en validant avec votre code secret Mobile Money.', ['value1' => number_format($this->depositAmount, 0, ',', ' '), 'value2' => $this->depositPhone]));
             } else {
                 $this->activePendingTxId = null;
-                session()->flash('error', $tx->description ?? "La recharge a échoué. Veuillez vérifier votre numéro et réessayer.");
+                session()->flash('error', $tx->description ?? __('La recharge a échoué. Veuillez vérifier votre numéro et réessayer.'));
             }
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
@@ -87,12 +87,12 @@ class WalletManager extends Component
                 if ($this->activePendingTxId === $tx->id) {
                     $this->activePendingTxId = null;
                 }
-                session()->flash('status', "🎉 Paiement validé sur le téléphone ! Votre wallet a été crédité de " . number_format($updated->amount, 0, ',', ' ') . " FCFA.");
+                session()->flash('status', __('🎉 Paiement validé sur le téléphone ! Votre wallet a été crédité de :value1 FCFA.', ['value1' => number_format($updated->amount, 0, ',', ' ')]));
             } elseif ($updated->status === 'failed') {
                 if ($this->activePendingTxId === $tx->id) {
                     $this->activePendingTxId = null;
                 }
-                session()->flash('error', "❌ Paiement refusé ou annulé sur votre téléphone.");
+                session()->flash('error', __('❌ Paiement refusé ou annulé sur votre téléphone.'));
             }
         }
     }
@@ -110,12 +110,12 @@ class WalletManager extends Component
         $updated = $campayService->checkTransactionStatus($transaction);
         if ($updated->status === 'successful') {
             $this->activePendingTxId = null;
-            session()->flash('status', "✅ Paiement confirmé sur votre téléphone et solde crédité de " . number_format($updated->amount, 0, ',', ' ') . " FCFA !");
+            session()->flash('status', __('✅ Paiement confirmé sur votre téléphone et solde crédité de :value1 FCFA !', ['value1' => number_format($updated->amount, 0, ',', ' ')]));
         } elseif ($updated->status === 'failed') {
             $this->activePendingTxId = null;
-            session()->flash('error', "❌ Paiement annulé ou expiré : " . $updated->description);
+            session()->flash('error', __('❌ Paiement annulé ou expiré : :value1', ['value1' => $updated->description]));
         } else {
-            session()->flash('status', "⏳ Demande toujours en attente sur votre téléphone. Veuillez vérifier l'écran de votre téléphone et entrer votre code secret.");
+            session()->flash('status', __('⏳ Demande toujours en attente sur votre téléphone. Veuillez vérifier l\'écran de votre téléphone et entrer votre code secret.'));
         }
     }
 
@@ -137,7 +137,7 @@ class WalletManager extends Component
             $tx = $campayService->withdraw($user, (float) $this->withdrawAmount, $this->withdrawPhone, $this->withdrawMethod);
             $this->showWithdrawModal = false;
             $this->dispatch('close-withdraw-modal');
-            session()->flash('status', "Retrait de " . number_format($this->withdrawAmount, 2) . " FCFA initié avec succès vers " . strtoupper($this->withdrawMethod) . " ({$this->withdrawPhone}) !");
+            session()->flash('status', __('Retrait de :value1 FCFA initié avec succès vers :value2 (:value3) !', ['value1' => number_format($this->withdrawAmount, 2), 'value2' => strtoupper($this->withdrawMethod), 'value3' => $this->withdrawPhone]));
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());
         }

@@ -75,7 +75,7 @@ class CampayService
             'phone_number'   => $phone,
             'reference'      => $ref,
             'status'         => 'pending',
-            'description'    => "Recharge Wallet de " . number_format($amount, 0, ',', ' ') . " FCFA via " . strtoupper($method),
+            'description'    => \App\Support\LocalizedMessage::store('events.wallet_top_up_of_fcfa_via', ['value1' => number_format($amount, 0, ',', ' '), 'value2' => strtoupper($method)]),
         ]);
 
         $token = $this->getToken();
@@ -86,7 +86,7 @@ class CampayService
                 Log::warning('Campay: Token non obtenu, simulation du dépôt en mode démo/local.');
                 $transaction->update([
                     'status'      => 'successful',
-                    'description' => "Recharge de " . number_format($amount, 0, ',', ' ') . " FCFA effectuée avec succès (mode démonstration).",
+                    'description' => \App\Support\LocalizedMessage::store('events.top_up_of_fcfa_completed_successfully_demo_mode', ['value1' => number_format($amount, 0, ',', ' ')]),
                 ]);
                 $user->increment('balance', $amount);
                 $this->notifySuccess($user, $amount, $method);
@@ -97,7 +97,7 @@ class CampayService
             Log::error("Campay PRODUCTION: impossible d'obtenir le token. Vérifiez CAMPAY_USERNAME et CAMPAY_PASSWORD dans .env.");
             $transaction->update([
                 'status'      => 'failed',
-                'description' => 'Authentification CamPay échouée. Contactez le support.',
+                'description' => \App\Support\LocalizedMessage::store('events.campay_authentication_failed_please_contact_support'),
             ]);
             return $transaction;
         }
@@ -114,7 +114,7 @@ class CampayService
                     'amount'             => (string) $chargeAmount, // 10 FCFA test charge
                     'currency'           => 'XAF',
                     'from'               => $formattedPhone,
-                    'description'        => "Recharge SafeMarket ({$ref})",
+                    'description'        => __('Recharge SafeMarket (:value1)', ['value1' => $ref]),
                     'external_reference' => $ref,
                 ]);
 
@@ -132,15 +132,15 @@ class CampayService
                     // Only mark successful if the Campay API explicitly returned SUCCESSFUL immediately
                     $transaction->update([
                         'status'      => 'successful',
-                        'description' => "Recharge de " . number_format($amount, 0, ',', ' ') . " FCFA effectuée avec succès via " . strtoupper($method),
+                        'description' => \App\Support\LocalizedMessage::store('events.top_up_of_fcfa_completed_successfully_via', ['value1' => number_format($amount, 0, ',', ' '), 'value2' => strtoupper($method)]),
                     ]);
                     $user->increment('balance', $amount);
                     $this->notifySuccess($user, $amount, $method);
                 } else {
                     // PENDING — User has received the USSD prompt on their phone and must confirm with PIN
                     $instruction = ($method === 'om' || strtolower((string)$operator) === 'orange' || $ussdCode)
-                        ? "Veuillez composer le " . ($ussdCode ?: '#150*50#') . " sur votre téléphone Orange Money pour valider le débit avec votre code secret."
-                        : "Veuillez entrer votre code secret Mobile Money dans le message apparu sur votre téléphone ({$phone}).";
+                        ? \App\Support\LocalizedMessage::store('events.please_dial_on_your_orange_money_phone_and', ['value1' => ($ussdCode ?: '#150*50#')])
+                        : \App\Support\LocalizedMessage::store('events.please_enter_your_mobile_money_pin_in_the', ['value1' => $phone]);
 
                     $transaction->update([
                         'status'      => 'pending',
@@ -152,16 +152,16 @@ class CampayService
                 Log::warning("Campay collect failed [{$response->status()}]: " . $response->body());
                 $transaction->update([
                     'status'      => 'failed',
-                    'description' => 'Refus Campay: ' . (is_string($errorMsg) ? $errorMsg : json_encode($errorMsg)),
+                    'description' => \App\Support\LocalizedMessage::store('events.campay_declined_the_request'),
                 ]);
             }
         } catch (\InvalidArgumentException $e) {
-            $transaction->update(['status' => 'failed', 'description' => $e->getMessage()]);
+            $transaction->update(['status' => 'failed', 'description' => \App\Support\LocalizedMessage::store('events.invalid_phone')]);
         } catch (\Exception $e) {
             Log::error('Campay Collect Exception: ' . $e->getMessage());
             $transaction->update([
                 'status'      => 'failed',
-                'description' => 'Erreur lors de la connexion à CamPay: ' . $e->getMessage(),
+                'description' => \App\Support\LocalizedMessage::store('events.error_connecting_to_campay'),
             ]);
         }
 
@@ -196,7 +196,7 @@ class CampayService
                 if ($apiStatus === 'SUCCESSFUL' && $transaction->status === 'pending') {
                     $transaction->update([
                         'status' => 'successful', 
-                        'description' => 'Paiement confirmé par le téléphone et crédité avec succès.'
+                        'description' => \App\Support\LocalizedMessage::store('events.payment_confirmed_on_your_phone_and_credited_successfully')
                     ]);
                     $user = $transaction->user;
                     $user->increment('balance', $transaction->amount);
@@ -204,7 +204,7 @@ class CampayService
                 } elseif (in_array($apiStatus, ['FAILED', 'CANCELLED', 'EXPIRED']) && $transaction->status === 'pending') {
                     $transaction->update([
                         'status' => 'failed', 
-                        'description' => 'Paiement refusé ou annulé sur le téléphone.'
+                        'description' => \App\Support\LocalizedMessage::store('events.payment_declined_or_cancelled_on_your_phone')
                     ]);
                 }
             }
@@ -221,7 +221,7 @@ class CampayService
     public function withdraw(User $user, float $amount, string $phone, string $method = 'momo'): Transaction
     {
         if ($user->balance < $amount) {
-            throw new \Exception('Solde insuffisant pour ce retrait.');
+            throw new \Exception(__('Solde insuffisant pour ce retrait.'));
         }
 
         $ref = 'WD-' . strtoupper(Str::random(10));
@@ -234,7 +234,7 @@ class CampayService
             'phone_number'   => $phone,
             'reference'      => $ref,
             'status'         => 'pending',
-            'description'    => "Retrait Wallet vers " . strtoupper($method) . " ({$phone})",
+            'description'    => \App\Support\LocalizedMessage::store('events.wallet_withdrawal_to', ['value1' => strtoupper($method), 'value2' => $phone]),
         ]);
 
         // Deduct balance upfront
@@ -245,11 +245,11 @@ class CampayService
         if (! $token) {
             if ($this->environment === 'demo' || app()->environment('testing', 'local')) {
                 Log::warning('Campay Withdraw: Token non obtenu, simulation du retrait en mode démo/local.');
-                $transaction->update(['status' => 'successful', 'description' => "Retrait de " . number_format($amount, 0, ',', ' ') . " FCFA simulé avec succès (mode démonstration)."]);
+                $transaction->update(['status' => 'successful', 'description' => \App\Support\LocalizedMessage::store('events.withdrawal_of_fcfa_simulated_successfully_demo_mode', ['value1' => number_format($amount, 0, ',', ' ')])]);
             } else {
                 // Refund balance in production if we can't authenticate
                 $user->increment('balance', $amount);
-                $transaction->update(['status' => 'failed', 'description' => 'Authentification CamPay échouée. Contactez le support.']);
+                $transaction->update(['status' => 'failed', 'description' => \App\Support\LocalizedMessage::store('events.campay_authentication_failed_please_contact_support')]);
             }
             return $transaction;
         }
@@ -265,7 +265,7 @@ class CampayService
                     'amount'             => (string) round($amount),
                     'currency'           => 'XAF',
                     'to'                 => $formattedPhone,
-                    'description'        => "Retrait SafeMarket ({$ref})",
+                    'description'        => __('Retrait SafeMarket (:value1)', ['value1' => $ref]),
                     'external_reference' => $ref,
                 ]);
 
@@ -277,10 +277,10 @@ class CampayService
                 $transaction->update(['provider_reference' => $providerRef]);
 
                 if ($apiStatus === 'SUCCESSFUL' || $this->environment === 'demo') {
-                    $transaction->update(['status' => 'successful', 'description' => "Retrait de " . number_format($amount, 0, ',', ' ') . " FCFA envoyé vers {$phone} (" . strtoupper($method) . ")"]);
+                    $transaction->update(['status' => 'successful', 'description' => \App\Support\LocalizedMessage::store('events.withdrawal_of_fcfa_sent_to', ['value1' => number_format($amount, 0, ',', ' '), 'value2' => $phone, 'value3' => strtoupper($method)])]);
                 } else {
                     $transaction->update([
-                        'description' => "Retrait en cours de traitement vers {$phone}.",
+                        'description' => \App\Support\LocalizedMessage::store('events.withdrawal_to_is_being_processed', ['value1' => $phone]),
                     ]);
                 }
             } else {
@@ -291,28 +291,28 @@ class CampayService
                 if ($this->environment === 'demo' || str_contains(strtoupper((string)$errorMsg), 'UNAUTHORIZED')) {
                     $transaction->update([
                         'status'      => 'successful',
-                        'description' => "Retrait de " . number_format($amount, 0, ',', ' ') . " FCFA confirmé en mode test vers {$phone} (" . strtoupper($method) . ")",
+                        'description' => \App\Support\LocalizedMessage::store('events.withdrawal_of_fcfa_confirmed_in_test_mode_to', ['value1' => number_format($amount, 0, ',', ' '), 'value2' => $phone, 'value3' => strtoupper($method)]),
                     ]);
                 } else {
                     $transaction->update([
                         'status'      => 'failed',
-                        'description' => 'Retrait refusé: ' . (is_string($errorMsg) ? $errorMsg : json_encode($errorMsg)),
+                        'description' => \App\Support\LocalizedMessage::store('events.withdrawal_declined'),
                     ]);
                     $user->increment('balance', $amount);
                 }
             }
         } catch (\InvalidArgumentException $e) {
-            $transaction->update(['status' => 'failed', 'description' => $e->getMessage()]);
+            $transaction->update(['status' => 'failed', 'description' => \App\Support\LocalizedMessage::store('events.invalid_phone')]);
             $user->increment('balance', $amount);
         } catch (\Exception $e) {
             Log::error('Campay Withdraw Exception: ' . $e->getMessage());
             if ($this->environment === 'demo') {
                 $transaction->update([
                     'status'      => 'successful',
-                    'description' => "Retrait de " . number_format($amount, 0, ',', ' ') . " FCFA confirmé en mode test vers {$phone}",
+                    'description' => \App\Support\LocalizedMessage::store('events.withdrawal_of_fcfa_confirmed_in_test_mode_to_2', ['value1' => number_format($amount, 0, ',', ' '), 'value2' => $phone]),
                 ]);
             } else {
-                $transaction->update(['status' => 'failed', 'description' => 'Erreur retrait: ' . $e->getMessage()]);
+                $transaction->update(['status' => 'failed', 'description' => \App\Support\LocalizedMessage::store('events.withdrawal_error')]);
                 $user->increment('balance', $amount);
             }
         }
@@ -340,7 +340,7 @@ class CampayService
         // Must be 237 + 9 digits starting with 6 or 9 (all Cameroon mobile prefixes)
         if (! preg_match('/^237[6-9]\d{8}$/', $phone)) {
             throw new \InvalidArgumentException(
-                'Numéro invalide. Utilisez un numéro camerounais valide à 9 chiffres (ex: 699000000 ou 677000000).'
+                __('Numéro invalide. Utilisez un numéro camerounais valide à 9 chiffres (ex: 699000000 ou 677000000).')
             );
         }
 
@@ -375,7 +375,7 @@ class CampayService
         if ($status === 'SUCCESSFUL') {
             $transaction->update([
                 'status' => 'successful',
-                'description' => 'Paiement confirmé par le téléphone (Webhook) et crédité avec succès.',
+                'description' => \App\Support\LocalizedMessage::store('events.payment_confirmed_on_your_phone_and_credited_successfully_2'),
                 'provider_reference' => $providerRef ?? $transaction->provider_reference,
             ]);
             $user = $transaction->user;
@@ -385,7 +385,7 @@ class CampayService
         } elseif (in_array($status, ['FAILED', 'CANCELLED', 'EXPIRED'])) {
             $transaction->update([
                 'status' => 'failed',
-                'description' => 'Paiement refusé ou annulé (Webhook).',
+                'description' => \App\Support\LocalizedMessage::store('events.payment_declined_or_cancelled'),
                 'provider_reference' => $providerRef ?? $transaction->provider_reference,
             ]);
             return true;
@@ -402,8 +402,8 @@ class CampayService
         try {
             \App\Models\Notification::create([
                 'user_id' => $user->id,
-                'title'   => 'Recharge Wallet réussie',
-                'content' => "Votre compte SafeMarket a été crédité de " . number_format($amount, 0, ',', ' ') . " FCFA via " . strtoupper($method) . ".",
+                'title'   => \App\Support\LocalizedMessage::store('events.wallet_top_up_successful'),
+                'content' => \App\Support\LocalizedMessage::store('events.your_safemarket_account_has_been_credited_with_fcfa', ['value1' => number_format($amount, 0, ',', ' '), 'value2' => strtoupper($method)]),
             ]);
         } catch (\Throwable $e) {
             Log::warning('Notification wallet failed: ' . $e->getMessage());

@@ -22,8 +22,8 @@ class OrderService
         if ($updated) {
             Notification::create([
                 'user_id' => $order->buyer_id,
-                'title' => 'Order Shipped 📦',
-                'content' => "The Vendor has shipped the Product '{$order->product->title}'. Tracking Number: {$trackingNumber}.",
+                'title' => \App\Support\LocalizedMessage::store('events.order_shipped'),
+                'content' => \App\Support\LocalizedMessage::store('events.the_seller_has_shipped_your_order_for_tracking', ['value1' => $order->product->title, 'value2' => $trackingNumber]),
             ]);
         }
 
@@ -39,8 +39,8 @@ class OrderService
         if ($updated) {
             Notification::create([
                 'user_id' => $order->buyer_id,
-                'title' => 'Order delivered 📦',
-                'content' => "Then merchant has marked your order for the product '{$order->product->title}' as delivered. please confirm receipt to release the fund.",
+                'title' => \App\Support\LocalizedMessage::store('events.order_delivered'),
+                'content' => \App\Support\LocalizedMessage::store('events.the_seller_has_marked_your_order_for_as', ['value1' => $order->product->title]),
             ]);
         }
 
@@ -50,7 +50,7 @@ class OrderService
     public function completeOrder(Order $order, string $releaseCode): bool
     {
         if (trim(strtoupper($order->release_code)) !== trim(strtoupper($releaseCode))) {
-            throw new \Exception('Code de libération invalide.');
+            throw new \Exception(__('Code de libération invalide.'));
         }
 
         return DB::transaction(function () use ($order) {
@@ -71,7 +71,7 @@ class OrderService
                     'payment_method' => 'wallet',
                     'reference' => 'TAX-' . strtoupper(Str::random(10)),
                     'status' => 'successful',
-                    'description' => "Commission plateforme 5% sur la commande #{$order->id}",
+                    'description' => \App\Support\LocalizedMessage::store('events.platform_commission_on_order', ['value1' => $order->id]),
                 ]);
             }
 
@@ -86,15 +86,15 @@ class OrderService
                     'payment_method' => 'wallet',
                     'reference' => 'REL-' . strtoupper(Str::random(10)),
                     'status' => 'successful',
-                    'description' => "Paiement vente commande #{$order->id} ('{$order->product->title}')",
+                    'description' => \App\Support\LocalizedMessage::store('events.sale_payment_for_order', ['value1' => $order->id, 'value2' => $order->product->title]),
                 ]);
             }
 
             // Send notification to vendor
             Notification::create([
                 'user_id' => $order->product->vendor_id,
-                'title' => 'Fund release 💰',
-                'content' => "The buyer has valid the receipt of the product '{$order->product->title}'. The amount " . number_format($vendorAmount, 2) . " FCFA was credited to your account.",
+                'title' => \App\Support\LocalizedMessage::store('events.funds_released'),
+                'content' => \App\Support\LocalizedMessage::store('events.the_buyer_has_confirmed_receipt_of_fcfa_has', ['value1' => $order->product->title, 'value2' => number_format($vendorAmount, 2)]),
             ]);
 
             return true;

@@ -47,7 +47,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('vendor.products.index')->with('status', 'Produit ajouté avec succès.');
+        return redirect()->route('vendor.products.index')->with('status', __('Produit ajouté avec succès.'));
     }
 
     public function edit(Product $product)
@@ -83,13 +83,13 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('vendor.products.index')->with('status', 'Produit mis à jour.');
+        return redirect()->route('vendor.products.index')->with('status', __('Produit mis à jour.'));
     }
 
     public function destroy(Product $product)
     {
         if ($product->vendor_id !== auth()->id()) abort(403);
         $product->delete();
-        return back()->with('status', 'Produit supprimé.');
+        return back()->with('status', __('Produit supprimé.'));
     }
 }

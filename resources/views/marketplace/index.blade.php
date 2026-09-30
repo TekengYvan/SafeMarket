@@ -28,7 +28,7 @@
                                 <div class="space-y-1">
                                     <a href="{{ route('home', ['category' => $cat->slug]) }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all {{ request('category') == $cat->slug ? 'bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-850/40 hover:text-gray-900 dark:hover:text-gray-200' }}">
                                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                        <span>{{ $cat->name }}</span>
+                                        <span>{{ __($cat->name) }}</span>
                                     </a>
 
                                     @if($cat->children->isNotEmpty())
@@ -36,7 +36,7 @@
                                             @foreach($cat->children as $sub)
                                                 <a href="{{ route('home', ['category' => $sub->slug]) }}" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all {{ request('category') == $sub->slug ? 'text-red-650 dark:text-red-400 font-bold' : 'text-gray-550 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-250' }}">
                                                     <span>•</span>
-                                                    <span>{{ $sub->name }}</span>
+                                                    <span>{{ __($sub->name) }}</span>
                                                 </a>
                                             @endforeach
                                         </div>
@@ -81,7 +81,7 @@
                                         <!-- Badge overlay Category -->
                                         <div class="absolute top-3.5 left-3.5">
                                             <span class="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-white/90 dark:bg-gray-900/90 text-red-600 dark:text-red-400 rounded-full backdrop-blur shadow-sm">
-                                                {{ $product->category->name }}
+                                                {{ __($product->category->name) }}
                                             </span>
                                         </div>
 
@@ -102,7 +102,7 @@
                                         <div class="flex justify-between items-center mt-2 mb-1">
                                             <span class="text-xl font-extrabold text-red-600 dark:text-red-500">{{ number_format($product->price, 2) }} FCFA</span>
                                             <span class="px-2 py-0.5 text-[10px] font-bold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded uppercase">
-                                                {{ $product->condition }}
+                                                {{ \App\Support\LocalizedMessage::status($product->condition) }}
                                             </span>
                                         </div>
                                     </div>

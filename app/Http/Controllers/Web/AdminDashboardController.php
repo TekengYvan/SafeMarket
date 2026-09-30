@@ -45,17 +45,17 @@ class AdminDashboardController extends Controller
         }
 
         // Send Notification to User
-        $title = $request->status === 'verified' ? 'Compte commerçant validé ! 🎉' : 'Dossier KYC rejeté ⚠️';
+        $title = $request->status === 'verified' ? \App\Support\LocalizedMessage::store('events.seller_account_verified') : \App\Support\LocalizedMessage::store('events.identity_verification_rejected');
         $content = $request->status === 'verified' 
-            ? 'Félicitations, vos pièces d\'identité ont été validées. Vous pouvez maintenant accéder à votre boutique vendeur.'
-            : 'Malheureusement, vos pièces d\'identité ont été rejetées. Veuillez soumettre un document conforme dans votre profil.';
+            ? \App\Support\LocalizedMessage::store('events.congratulations_your_identity_documents_have_been_verified_you')
+            : \App\Support\LocalizedMessage::store('events.your_identity_documents_were_rejected_please_submit_a');
         \App\Models\Notification::create([
             'user_id' => $user->id,
             'title' => $title,
             'content' => $content,
         ]);
 
-        return back()->with('status', "KYC status updated to {$request->status} for {$user->name}");
+        return back()->with('status', __('KYC status updated to :value1 for :value2', ['value1' => \App\Support\LocalizedMessage::status($request->status), 'value2' => $user->name]));
     }
 
     public function reportsIndex()

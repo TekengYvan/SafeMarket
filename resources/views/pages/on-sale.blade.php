@@ -95,7 +95,7 @@
                         <!-- Info details -->
                         <div class="p-6 flex-grow flex flex-col justify-between">
                             <div class="space-y-1">
-                                <span class="text-[10px] text-stone-400 dark:text-zinc-500 font-bold uppercase tracking-widest">{{ $product->category->name }}</span>
+                                <span class="text-[10px] text-stone-400 dark:text-zinc-500 font-bold uppercase tracking-widest">{{ __($product->category->name) }}</span>
                                 <h3 class="font-heading font-extrabold text-base text-stone-950 dark:text-white uppercase leading-tight group-hover:text-red-650 transition-colors">
                                     @auth
                                         <a href="{{ route('products.show', $product) }}">{{ $product->title }}</a>
@@ -110,7 +110,7 @@
                                     <span class="text-lg font-black text-red-600 dark:text-red-500">{{ number_format($product->price, 0) }} FCFA</span>
                                 </div>
                                 <span class="text-xs px-2.5 py-1 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 font-bold rounded-lg border border-red-200/50 dark:border-red-900/30">
-                                    {{ app()->getLocale() == 'en' ? 'Condition' : 'État' }}: {{ $product->condition }}
+                                    {{ app()->getLocale() == 'en' ? 'Condition' : 'État' }}: {{ \App\Support\LocalizedMessage::status($product->condition) }}
                                 </span>
                             </div>
                         </div>

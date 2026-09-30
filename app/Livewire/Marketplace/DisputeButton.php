@@ -17,7 +17,7 @@ class DisputeButton extends Component
     public function openDispute()
     {
         if ($this->order->buyer_id !== Auth::id()) {
-            session()->flash('error', 'Seul l\'acheteur peut ouvrir un litige sur cette commande.');
+            session()->flash('error', __('Seul l\'acheteur peut ouvrir un litige sur cette commande.'));
             return;
         }
         
@@ -33,8 +33,8 @@ class DisputeButton extends Component
 
         Notification::create([
             'user_id' => $this->order->product->vendor_id,
-            'title' => 'Litige ouvert sur une commande ⚠️',
-            'content' => "L'acheteur a ouvert un litige pour le produit '{$this->order->product->title}'. Motif : {$this->reason}",
+            'title' => \App\Support\LocalizedMessage::store('events.dispute_opened_for_an_order'),
+            'content' => \App\Support\LocalizedMessage::store('events.the_buyer_opened_a_dispute_for_reason', ['value1' => $this->order->product->title, 'value2' => $this->reason]),
         ]);
 
         $admins = User::where('is_admin', true)
@@ -45,15 +45,15 @@ class DisputeButton extends Component
         foreach ($admins as $admin) {
             Notification::create([
                 'user_id' => $admin->id,
-                'title' => 'Nouveau litige à traiter ⚖️',
-                'content' => "La commande #{$this->order->id} pour '{$this->order->product->title}' nécessite votre arbitrage.",
+                'title' => \App\Support\LocalizedMessage::store('events.new_dispute_awaiting_review'),
+                'content' => \App\Support\LocalizedMessage::store('events.order_for_requires_your_arbitration', ['value1' => $this->order->id, 'value2' => $this->order->product->title]),
             ]);
         }
 
         $this->order->refresh();
         $this->reason = '';
         $this->isOpen = false;
-        session()->flash('status', 'Litige ouvert avec succès. Les fonds sont sécurisés en ESCROW jusqu\'à arbitrage.');
+        session()->flash('status', __('Litige ouvert avec succès. Les fonds sont sécurisés en ESCROW jusqu\'à arbitrage.'));
     }
 
     public function render()

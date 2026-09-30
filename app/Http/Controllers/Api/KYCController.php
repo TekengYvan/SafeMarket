@@ -32,7 +32,7 @@ class KYCController extends Controller
         $user->save();
 
         return response()->json([
-            'message' => 'KYC documents submitted successfully. Status is now pending.',
+            'message' => __('KYC documents submitted successfully. Status is now pending.'),
             'user' => $user
         ]);
     }

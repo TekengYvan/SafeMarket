@@ -36,7 +36,7 @@ class KycSubmission extends Component
         ]);
         $this->status = 'pending';
 
-        session()->flash('status', 'Votre document a été envoyé avec succès et est en attente de vérification.');
+        session()->flash('status', __('Votre document a été envoyé avec succès et est en attente de vérification.'));
     }
 
     public function render()

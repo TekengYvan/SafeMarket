@@ -118,7 +118,7 @@
                         <form wire:submit.prevent="submitCheckout" class="space-y-4">
                             <div class="space-y-1.5 text-left">
                                 <label class="text-[10px] font-black uppercase text-gray-500 dark:text-gray-450">{{ __('Téléphone Mobile Money') }}</label>
-                                <input type="tel" wire:model="phone" required placeholder="Ex: 699000000" class="w-full text-xs font-bold border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-gray-50 dark:bg-gray-950 focus:outline-none focus:border-red-500 text-gray-900 dark:text-white">
+                                <input type="tel" wire:model="phone" required placeholder="{{ __('Ex: 699000000') }}" class="w-full text-xs font-bold border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-gray-50 dark:bg-gray-950 focus:outline-none focus:border-red-500 text-gray-900 dark:text-white">
                                 <x-input-error :messages="$errors->get('phone')" class="mt-1" />
                             </div>
 
@@ -134,7 +134,7 @@
                                     <label class="p-3 border rounded-xl flex flex-col cursor-pointer transition" :class="$wire.paymentMethod === 'wallet' ? 'border-red-500 bg-red-50/20' : 'border-gray-200 dark:border-gray-800'">
                                         <div class="flex items-center gap-2">
                                             <input type="radio" wire:model.live="paymentMethod" value="wallet" class="text-red-600">
-                                            <span class="text-xs font-bold text-gray-800 dark:text-gray-200">Wallet</span>
+                                            <span class="text-xs font-bold text-gray-800 dark:text-gray-200">{{ __('Wallet') }}</span>
                                         </div>
                                         <span class="text-[10px] text-gray-500 mt-1">{{ number_format(auth()->user()->balance, 2) }} FCFA {{ __('dispo') }}</span>
                                     </label>

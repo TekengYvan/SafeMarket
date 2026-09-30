@@ -57,7 +57,7 @@ class ReviewSystem extends Component
         $vendor->save();
 
         $this->hasReviewed = true;
-        session()->flash('status', 'Merci pour votre avis !');
+        session()->flash('status', __('Merci pour votre avis !'));
     }
 
     public function render()

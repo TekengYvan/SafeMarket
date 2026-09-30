@@ -40,11 +40,11 @@ class OrderController extends Controller
         $product = Product::findOrFail($request->product_id);
 
         if ($product->status !== 'available') {
-            return response()->json(['message' => 'Product is not available'], 400);
+            return response()->json(['message' => __('Product is not available')], 400);
         }
 
         if ($product->vendor_id === $request->user()->id) {
-            return response()->json(['message' => 'You cannot buy your own product'], 400);
+            return response()->json(['message' => __('You cannot buy your own product')], 400);
         }
 
         $order = Order::create([
@@ -63,27 +63,27 @@ class OrderController extends Controller
     public function pay(Request $request, Order $order)
     {
         if ($order->buyer_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         if ($order->status !== 'awaiting_payment') {
-            return response()->json(['message' => 'Order is not in awaiting payment status'], 400);
+            return response()->json(['message' => __('Order is not in awaiting payment status')], 400);
         }
 
         // Simulate payment success
         $order->update(['status' => 'funds_held']);
 
-        return response()->json(['message' => 'Payment successful, funds are now held in ESCROW', 'order' => $order]);
+        return response()->json(['message' => __('Payment successful, funds are now held in ESCROW'), 'order' => $order]);
     }
 
     public function ship(Request $request, Order $order)
     {
         if ($order->product->vendor_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         if ($order->status !== 'funds_held') {
-            return response()->json(['message' => 'Order must be paid before shipping'], 400);
+            return response()->json(['message' => __('Order must be paid before shipping')], 400);
         }
 
         $request->validate([
@@ -92,17 +92,17 @@ class OrderController extends Controller
 
         $this->orderService->shipOrder($order, $request->tracking_number);
 
-        return response()->json(['message' => 'Order marked as shipped', 'order' => $order]);
+        return response()->json(['message' => __('Order marked as shipped'), 'order' => $order]);
     }
 
     public function complete(Request $request, Order $order)
     {
         if ($order->buyer_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
         if ($order->status !== 'shipped') {
-            return response()->json(['message' => 'Order must be shipped before completion'], 400);
+            return response()->json(['message' => __('Order must be shipped before completion')], 400);
         }
 
         $request->validate([
@@ -111,7 +111,7 @@ class OrderController extends Controller
 
         try {
             $this->orderService->completeOrder($order, $request->release_code);
-            return response()->json(['message' => 'Order completed, funds released to vendor', 'order' => $order->fresh()]);
+            return response()->json(['message' => __('Order completed, funds released to vendor'), 'order' => $order->fresh()]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
